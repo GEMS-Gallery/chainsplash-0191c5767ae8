@@ -7,7 +7,7 @@ type Transaction = {
   id: string;
   from: string;
   to: string;
-  amount: bigint;
+  amount: number;
   timestamp: bigint;
 };
 
@@ -18,11 +18,11 @@ function History() {
   useEffect(() => {
     const fetchTransactionHistory = async () => {
       try {
-        // For simplicity, we're using a hardcoded account ID.
+        // For simplicity, we're using a hardcoded wallet ID.
         // In a real app, you'd want to get this from the user's authenticated session.
-        const accountId = 'user_account_id';
-        const history = await backend.getTransactionHistory(accountId);
-        setTransactions(history);
+        const walletId = 'user_wallet_id';
+        const history = await backend.getTransactionHistory(walletId);
+        setTransactions(history.map(t => ({ ...t, amount: Number(t.amount) })));
       } catch (error) {
         console.error('Error fetching transaction history:', error);
       } finally {
@@ -38,8 +38,8 @@ function History() {
     { name: 'From', selector: (row: Transaction) => row.from, sortable: true },
     { name: 'To', selector: (row: Transaction) => row.to, sortable: true },
     { 
-      name: 'Amount', 
-      selector: (row: Transaction) => row.amount.toString(),
+      name: 'Amount (ICP)', 
+      selector: (row: Transaction) => row.amount.toFixed(8),
       sortable: true
     },
     { 

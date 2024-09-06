@@ -1,29 +1,28 @@
 export const idlFactory = ({ IDL }) => {
-  const AccountId = IDL.Text;
-  const Result_2 = IDL.Variant({ 'ok' : AccountId, 'err' : IDL.Text });
-  const Amount = IDL.Nat;
+  const WalletId = IDL.Text;
+  const Result_2 = IDL.Variant({ 'ok' : WalletId, 'err' : IDL.Text });
+  const Amount = IDL.Float64;
   const Result_1 = IDL.Variant({ 'ok' : Amount, 'err' : IDL.Text });
   const TransactionId = IDL.Text;
   const Time = IDL.Int;
   const Transaction = IDL.Record({
     'id' : TransactionId,
-    'to' : AccountId,
-    'from' : AccountId,
+    'to' : WalletId,
+    'from' : WalletId,
     'timestamp' : Time,
     'amount' : Amount,
   });
   const Result = IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text });
   return IDL.Service({
-    'createAccount' : IDL.Func([], [Result_2], []),
-    'getBalance' : IDL.Func([AccountId], [Result_1], ['query']),
+    'createWallet' : IDL.Func([], [Result_2], []),
+    'getBalance' : IDL.Func([WalletId], [Result_1], ['query']),
     'getTransactionHistory' : IDL.Func(
-        [AccountId],
+        [WalletId],
         [IDL.Vec(Transaction)],
         ['query'],
       ),
-    'importAccount' : IDL.Func([AccountId], [Result], []),
     'sendICP' : IDL.Func(
-        [AccountId, IDL.Vec(AccountId), IDL.Vec(Amount)],
+        [WalletId, IDL.Vec(WalletId), IDL.Vec(Amount)],
         [Result],
         [],
       ),

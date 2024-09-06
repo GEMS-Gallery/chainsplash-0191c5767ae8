@@ -3,31 +3,29 @@ import { Typography, Card, CardContent, CircularProgress } from '@mui/material';
 import { backend } from '../../declarations/backend';
 
 function Home() {
-  const [accountId, setAccountId] = useState<string | null>(null);
-  const [balance, setBalance] = useState<bigint | null>(null);
+  const [walletId, setWalletId] = useState<string | null>(null);
+  const [balance, setBalance] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchAccountData = async () => {
+    const fetchWalletData = async () => {
       try {
-        // For simplicity, we're creating a new account each time.
-        // In a real app, you'd want to store and retrieve the account ID.
-        const result = await backend.createAccount();
+        const result = await backend.createWallet();
         if ('ok' in result) {
-          setAccountId(result.ok);
+          setWalletId(result.ok);
           const balanceResult = await backend.getBalance(result.ok);
           if ('ok' in balanceResult) {
-            setBalance(balanceResult.ok);
+            setBalance(Number(balanceResult.ok));
           }
         }
       } catch (error) {
-        console.error('Error fetching account data:', error);
+        console.error('Error fetching wallet data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAccountData();
+    fetchWalletData();
   }, []);
 
   if (loading) {
@@ -38,13 +36,13 @@ function Home() {
     <Card sx={{ minWidth: 275, mt: 4 }}>
       <CardContent>
         <Typography variant="h5" component="div" gutterBottom>
-          Account Overview
+          Wallet Overview
         </Typography>
         <Typography variant="body1">
-          Account ID: {accountId}
+          Wallet ID: {walletId}
         </Typography>
         <Typography variant="body1">
-          Balance: {balance !== null ? balance.toString() : 'N/A'} ICP
+          Balance: {balance !== null ? balance.toFixed(8) : 'N/A'} ICP
         </Typography>
       </CardContent>
     </Card>

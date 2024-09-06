@@ -1,17 +1,18 @@
+type WalletId = text;
 type TransactionId = text;
 type Transaction = 
  record {
    amount: Amount;
-   from: AccountId;
+   from: WalletId;
    id: TransactionId;
    timestamp: Time;
-   to: AccountId;
+   to: WalletId;
  };
 type Time = int;
 type Result_2 = 
  variant {
    err: text;
-   ok: AccountId;
+   ok: WalletId;
  };
 type Result_1 = 
  variant {
@@ -23,12 +24,10 @@ type Result =
    err: text;
    ok;
  };
-type Amount = nat;
-type AccountId = text;
+type Amount = float64;
 service : {
-  createAccount: () -> (Result_2);
-  getBalance: (AccountId) -> (Result_1) query;
-  getTransactionHistory: (AccountId) -> (vec Transaction) query;
-  importAccount: (AccountId) -> (Result);
-  sendICP: (AccountId, vec AccountId, vec Amount) -> (Result);
+  createWallet: () -> (Result_2);
+  getBalance: (WalletId) -> (Result_1) query;
+  getTransactionHistory: (WalletId) -> (vec Transaction) query;
+  sendICP: (WalletId, vec WalletId, vec Amount) -> (Result);
 }

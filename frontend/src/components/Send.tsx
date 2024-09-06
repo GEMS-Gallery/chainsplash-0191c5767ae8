@@ -18,11 +18,11 @@ function Send() {
     setResult(null);
     try {
       const recipients = data.recipients.split(',').map(r => r.trim());
-      const amounts = data.amounts.split(',').map(a => BigInt(a.trim()));
+      const amounts = data.amounts.split(',').map(a => parseFloat(a.trim()));
       
-      // For simplicity, we're using a hardcoded 'from' account.
+      // For simplicity, we're using a hardcoded 'from' wallet.
       // In a real app, you'd want to get this from the user's authenticated session.
-      const from = 'user_account_id';
+      const from = 'user_wallet_id';
       
       const sendResult = await backend.sendICP(from, recipients, amounts);
       if ('ok' in sendResult) {
